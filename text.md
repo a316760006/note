@@ -1,19 +1,28 @@
 ##webpack基础篇
-1.初始化  npm init -y
-2.webpack安装 npm install webpack webpack-cli -D
-3.创建文件夹  dist  src
- -dist  index.html
- -src  index.js
-4.手动配置webpack  
+1. 初始化  npm init -y
+2. webpack安装
+```
+    npm install webpack webpack-cli -D
+```
+3. 创建文件夹  dist  src
+ - dist
+    - index.html
+ - src
+    - index.js
+4. 手动配置webpack  
+```
     webpack.config.js||webpackfile.js
-5.在package.json配置脚本命令
+```
+5. 在package.json配置脚本命令
+```
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack --config webpack.config.js",
         "dev": "webpack-dev-server",
         "start": "npm run dev"
     },
-6.配置打包环境  npm install webpack webpack-dev-server -D
+```
+6. 配置打包环境  npm install webpack webpack-dev-server -D
     在webpack.config.js的module.exports中配置
     devServer: {
         port: 3000,
@@ -25,9 +34,10 @@
         }
     }
 
-7.插件处理html
-    -src文件夹下  -index.js， -index.html
+7. 插件处理html
+    - src文件夹下  -index.js， -index.html
     npm install html-webpack-plugin -D
+```
     let HtmlWebpackPlugin = require("html-webpack-plugin");
     plugins: [
         new HtmlWebpackPlugin({
@@ -35,10 +45,12 @@
             filename: "index.html",   //编译后的文件名
         })
     ],
+```
 
-8.插件处理样式
+8. 插件处理样式
     npm install css-loader style-loader -D
-    -src 文件夹  -index1.html -index.js -style.css
+    - src 文件夹  -index1.html -index.js -style.css
+```
     index.js下 require("style.css")
     module:{
         rules:[
@@ -48,11 +60,13 @@
             }
         ]
     }
-9.配置less编译
+```
+9. 配置less编译
     npm install less less-loader -D
     - src文件夹   index.html  index.js  style.css   b.less
     index.js下 require("b.less")
     - webpack.config.js文件里
+```
     module:{
         rules:[
               {
@@ -65,11 +79,13 @@
               }
         ]
     }
+```
 
-10.抽离css
+10. 抽离css
    npm install  mini-css-extract-plugin -D
 
    在webpack.config.js里配置
+```
    let MiniCssExtractPlugin = require("mini-css-extract-plugin");
             {
                 test: /\.css$/,
@@ -78,8 +94,9 @@
    new MiniCssExtractPlugin({
         filename: "main.css"   //抽离出来的文件名
     }),
+```
 
-11.处理js es6转es5
+11. 处理js es6转es5
     1)npm install babel-loader @babel/core @babel/preset-env
     @babel/core babel核心模块
     @babel/preset-env  标准语法转成低级语法
@@ -107,7 +124,7 @@
         ]
     }
 
-12.配置优化项
+12. 配置优化项
     npm install optimize-css-assets-webpack-plugin  压缩css
     npm install terser-webpack-plugin -D  压缩js
     npm install @babel/plugin-syntax-dynamic-import
@@ -116,14 +133,16 @@
     let terserWebpackPlugin = require("terser-webpack-plugin")
 
     与devServer同级
+```
     optimization: { //优化
         minimizer: [
             new optimizeCssAssetsWebpackPlugin({}),
             new terserWebpackPlugin({}),
         ]
     },
+```
 
-13.第三方模块的使用
+13. 第三方模块的使用
     npm install jquery
     npm install expose-loader -D  负责把变量暴露给全局的loader
 
@@ -139,7 +158,7 @@
         use: "expose-loader?$"
     },
 
-14.在webpack中引入图片的几种方式
+14. 在webpack中引入图片的几种方式
     1）在index.js中引入图片
         import logo from './logo.png';
         let img = new Image() ;
@@ -148,11 +167,12 @@
     2)在css中引入background(url)
     3)<img src="logo.png">  需要把图片放到dist文件夹
 
-15.图片处理
+15. 图片处理
   npm install file-loader html-withimg-loader url-loader -D
   html-withimg-loader 解决打包路径不对的问题
 
   在webpack.config.js中module-rules配置
+```
     {
         test:/\.(png,jpg,gif)$/,
         use:"file-loader"
@@ -165,11 +185,13 @@
         test: /\.(jpg|png|gif|jpeg)$/,
         use:"url-loader"
     }
+```
   
        
    
-16.打包文件分类
+16. 打包文件分类
     1）图片url-loader的options里面添加
+```
         {
             test: /\.(jpg|png|gif|jpeg)$/,  //图片的格式
             use: {
@@ -180,6 +202,7 @@
                 }
             }
         }
+```
     2)css添加在css插件里面
         new MiniCssExtractPlugin({
             filename: "css/main.css"   //抽离出来的文件名
@@ -188,11 +211,12 @@
 
 ##webpack配置篇
 
-17.webpack常用插件
+17. webpack常用插件
     1）npm install clean-webpack-plugin -D  清除缓存插件，可以写字符串，也可以写数组
         let {CleanWebpackPlugin} = require("clean-webpack-plugin")
         new CleanWebpackPlugin(),    
     2)npm install copy-webpack-plugin -D 拷贝插件
+```
         let CopyWebpackPlugin = require("copy-webpack-plugin")
         new CopyWebpackPlugin({
             {
@@ -200,14 +224,18 @@
                 to: './static'
             }
         }),
+```
     3） 版权插件  webpack自带插件
-18.配置环境变量
+18. 配置环境变量
     node提供的环境变量：process.env.NODE_ENV
+```
     new webpack.DefinePlugin({
         "development":JSON.stringify("development")
     })
-19.webpack处理跨域问题（webpack自带express）
+```
+19. webpack处理跨域问题（webpack自带express）
     1）代理的方式，把请求代理到express的服务器上
+```
     devServer:{
     ...
     proxy:{ //
@@ -217,8 +245,10 @@
             }// 配置了一个代理
         }
     }
+```
     2)使用webpack提供mock数据 webpack自带express
         webpack提供一个方法before  参数是app
+```
         let express = require("express")
         let app = express()
         before(app) {  //在devServer
@@ -226,12 +256,14 @@
                 res.json('这是webpack提供的数据');
             })
         },
+```
     3)可以直接在node的服务端启动webpack，端口是服务端端口，不需要npm run dev来启动webpack
         npm install webpack-dev-middleware -D
 
-20.resolve用法  配置 Webpack 如何寻找模块所对应的文件
+20. resolve用法  配置 Webpack 如何寻找模块所对应的文件
 
     在webpack.config.js中配置与devServer同级
+```
     resolve:{
         modules:[path.resolve('node_modules')],  
         extensions:['.js','.css','.json','.vue'],  //拓展名
@@ -241,8 +273,9 @@
         bootstrap:'bootstrap/dist/css/bootstrap.css'
         }
     }
+```
 
-21.webpack配置vue的使用
+21. webpack配置vue的使用
     npm install vue vue-loader vue-template-compiler
 
     vue-loader 解析文件     vue-template-compiler 解析vue中的template
@@ -250,6 +283,7 @@
     1）webpack能找到以.vue结尾的文件名，配置扩展名
         在webpack.config.js中配置，与devServer同级
         // 配置vue
+```
         resolve: {
             extensions: ['.js', '.json', '.vue'],
             alias: {
@@ -257,6 +291,7 @@
                 vue$: "vue/dist/vue.esm.js"
             }
         },
+```
     2）vue-loader需要使用VueLoaderPlugin
             {
                 test: /\.vue$/,
@@ -281,7 +316,7 @@
         }).$mount('#app');
         在webpack.config.js中
        
-18.给浏览器添加前缀 
+18. 给浏览器添加前缀 
     npm install postcss-loader autoprefixer -D
     autoprefixer 自动添加浏览器前缀的插件
     npm install postcss-preset-env -D 允许使用 css 未来特性的插件  
@@ -289,14 +324,16 @@
      需要配置 postcss 默认文件 名字
       在根目录下创建 postcss.config.js/.postcssrc.js
       放到所有 cssloader 后面，执行顺序原因  
+```
         let autoprefixer = require('autoprefixer')
         const postcssPresetEnv = require('postcss-preset-env');
         module.exports = {
             plugins: [postcssPresetEnv, autoprefixer({})]
         };
+```
 
 ##区分开发和生产环境
-19.webpack.config.js
+19. webpack.config.js
     新建文件webpack.prod.config.js（生产环境）  webpack.dev.config.js（开发环境）
     下载webpack 合并配置的插件 npm install webpack-merge
 
@@ -307,6 +344,7 @@
     1）webpack.config.js的配置
         // 开发环境 config和dev配置合并
         // 生产环境 config和prod配置合并
+```
         let merge = require("webpack-merge");
         let config = require("./config")
         let prod = require("./webpack.prod.config")
@@ -321,7 +359,9 @@
                 return merge(config, prod)
             }
         }
+```
     2）config.js的配置
+```
         let path = require("path");
         let express = require("express")
         let app = express()
@@ -333,8 +373,10 @@
                 filename: "[name].js",     //打包后的文件名称  
             },
         }
+```
     3）webapck.dev.config.js的配置
         // 开发环境 development
+```
         let path = require("path");
         let { smart } = require("webpack-merge")
         let base = require("./webpack.config.js")
@@ -368,8 +410,10 @@
                 },
             },
         })
+```
     4）webpack.prod.config.js
     // 生产环境 production  配置其他loader和plugins
+```
         let path = require("path");
         let { smart } = require("webpack-merge")
         let base = require("./webpack.config.js")
@@ -413,8 +457,9 @@
                     },
             },
         })
+```
 
-20.多线程打包
+20. 多线程打包
     npm install happypack
     let happyPack = require("happypack")
     new happyPack({
